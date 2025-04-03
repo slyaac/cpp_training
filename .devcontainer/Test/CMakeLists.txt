@@ -23,9 +23,12 @@ if(MYFLAG STREQUAL  "OFF")
 #    message(STATUS "MYFLAG is : ${MYFLAG}")
     add_executable(myCode array.cpp main.cpp)
 endif()
+##
+target_compile_options(myCode PUBLIC -fprofile-arcs -ftest-coverage)
+target_link_options(myCode PUBLIC -fprofile-arcs -ftest-coverage)
 
 # Link GTest libraries
-target_link_libraries(myCode ${GTEST_LIBRARIES} pthread)
+target_link_libraries(myCode ${GTEST_LIBRARIES} pthread -lgcov)
 
 # Add test cases
 add_test(NAME myCode COMMAND myCode)
