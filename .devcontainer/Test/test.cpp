@@ -48,6 +48,13 @@ TEST(MyTestSuite, coverage) {
     EXPECT_TRUE(1==1);
 }
 
+TEST(MyTestSuite, coverage2) {
+    // Your test code here
+    Matrix neo1(1,1);
+    neo1[0][0] = 99;
+    EXPECT_TRUE(1==1);
+}
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
 

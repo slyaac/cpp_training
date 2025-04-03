@@ -11,6 +11,7 @@ class Matrix
         //2d vector
         vector<vector<int>> data;
         size_t rows, columns;
+        void printborders();
 
     public:
 
@@ -21,6 +22,7 @@ class Matrix
         void set(size_t sr, size_t sc, int val);
         //workaround to have two arguments...
         friend Matrix operator+(const Matrix &a, const Matrix &b);
+        vector<int>& operator[](const int index);
 
 };
 

@@ -1,6 +1,11 @@
 #include <iostream>
 #include "array.hpp"
 
+vector<int>& Matrix::operator[](const int index)
+{
+    return data[index];
+}
+
 Matrix operator+(const Matrix &a, const Matrix &b)
 {
     if((a.columns != b.columns) || (a.rows != b.rows))
@@ -22,16 +27,16 @@ Matrix operator+(const Matrix &a, const Matrix &b)
 
 void Matrix::show()
 {
+    printborders();
+    for(size_t i = 0; i < rows; i++)
     {
-        for(size_t i = 0; i < rows; i++)
+        for(size_t j = 0; j < columns; j++)
         {
-            for(size_t j = 0; j < columns; j++)
-            {
-                cout<<data[i][j]<<"";
-            }
-            cout <<endl;
+            cout<<data[i][j]<<" ";
         }
+        cout <<endl;
     }
+    printborders();
 }
 
 void Matrix::set(size_t sr, size_t sc, int val)
@@ -56,3 +61,14 @@ Matrix::Matrix(const vector<vector<int>> &init) : data(init)
     rows = data.size();
     columns = data[0].size();
 };
+
+void Matrix::printborders()
+{
+    int temp = columns*2 - 1;
+    while (temp > 0)
+    {
+        cout<<"-";
+        temp--;
+    };
+    cout<<endl;
+}
