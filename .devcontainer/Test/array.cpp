@@ -1,10 +1,19 @@
-#include <iostream>
-#include "array.hpp"
 
+#include "array.hpp"
+/*
+4) zamiast show przeładować operator <<
+5) Rozmiar macierzy ma być niezmienny
+6) Klasa Matrix ma działać na szablonach
+*/
+/* statyczna implementacja + T */
 vector<int>& Matrix::operator[](const int index)
 {
-    return data[index];
-}
+    return data[index]; 
+    /*
+    int Matrix::operator[](wiersz, col) //[3,3]
+    return data[weirsz][col]
+     */
+}/* readonly */
 
 Matrix operator+(const Matrix &a, const Matrix &b)
 {
@@ -23,20 +32,6 @@ Matrix operator+(const Matrix &a, const Matrix &b)
     }
 
     return new_data;
-}
-
-void Matrix::show()
-{
-    printborders();
-    for(size_t i = 0; i < rows; i++)
-    {
-        for(size_t j = 0; j < columns; j++)
-        {
-            cout<<data[i][j]<<" ";
-        }
-        cout <<endl;
-    }
-    printborders();
 }
 
 void Matrix::set(size_t sr, size_t sc, int val)
@@ -60,15 +55,38 @@ Matrix::Matrix(const vector<vector<int>> &init) : data(init)
     //rows and columns unknown
     rows = data.size();
     columns = data[0].size();
+    /* todo rows,col rem */
 };
 
-void Matrix::printborders()
+ostream& operator<<(ostream& os, const Matrix &a)
 {
-    int temp = columns*2 - 1;
+    int temp = a.data[0].size()*2 - 1;
     while (temp > 0)
     {
-        cout<<"-";
+        os<<"-";
         temp--;
     };
-    cout<<endl;
+    os<<endl;
+
+    //for(const auto& row : a.data)
+    for(size_t i = 0; i< a.data.size(); i++)
+    {
+        //for(const auto& element : row)
+        for(size_t j = 0; j< a.data[i].size(); j++)
+        {
+            //os<<element<<" ";
+            os<<a.data[i][j]<<" ";
+        }
+        os <<endl;
+    }
+
+    temp = a.data[0].size()*2 - 1;
+    while (temp > 0)
+    {
+        os<<"-";
+        temp--;
+    };
+    os<<endl;
+
+    return os;
 }
