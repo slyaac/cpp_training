@@ -12,7 +12,6 @@ class Matrix
     /* todo listy */
         //2d vector
         vector<vector<int>> data;
-        size_t rows, columns;
 
     public:
 

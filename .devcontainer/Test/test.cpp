@@ -44,7 +44,7 @@ TEST(MyTestSuite, Exception2) {
 TEST(MyTestSuite, coverage) {
     // Your test code here
     Matrix neo1({{1},{2},{3}});
-    neo1.show();
+    cout<<neo1;
     EXPECT_TRUE(1==1);
 }
 

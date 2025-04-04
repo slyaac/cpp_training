@@ -17,15 +17,16 @@ vector<int>& Matrix::operator[](const int index)
 
 Matrix operator+(const Matrix &a, const Matrix &b)
 {
-    if((a.columns != b.columns) || (a.rows != b.rows))
+    
+    if((a.data[0].size() != b.data[0].size()) || (a.data.size() != b.data.size()))
     {
         throw invalid_argument("matrix size must match when adding them");
     }
 
-    Matrix new_data(a.rows, a.columns);
-    for(size_t i = 0; i < a.rows; i++)
+    Matrix new_data(a.data.size(), a.data[0].size());
+    for(size_t i = 0; i < a.data.size(); i++)
     {
-        for(size_t j = 0; j < a.columns; j++)
+        for(size_t j = 0; j < a.data[0].size(); j++)
         {
             new_data.data[i][j] = a.data[i][j] + b.data[i][j];
         }
@@ -36,7 +37,7 @@ Matrix operator+(const Matrix &a, const Matrix &b)
 
 void Matrix::set(size_t sr, size_t sc, int val)
 {
-    if((sr > rows) || (sc > columns))
+    if((sr > data.size()) || (sc > data[0].size()))
     {
         throw invalid_argument(" out of bound");
     }
@@ -44,19 +45,13 @@ void Matrix::set(size_t sr, size_t sc, int val)
     data[sr][sc] = val;
 }
 
-Matrix::Matrix(size_t r, size_t c) : rows(r), columns(c)
+Matrix::Matrix(size_t r, size_t c)
 {
     //rows and columns passed as argument
-    data.resize(rows, vector<int>(columns, 0));
+    data.resize(r, vector<int>(c, 0));
 }
 
-Matrix::Matrix(const vector<vector<int>> &init) : data(init)
-{
-    //rows and columns unknown
-    rows = data.size();
-    columns = data[0].size();
-    /* todo rows,col rem */
-};
+Matrix::Matrix(const vector<vector<int>> &init) : data(init){};
 
 ostream& operator<<(ostream& os, const Matrix &a)
 {
