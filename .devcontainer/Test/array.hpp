@@ -21,7 +21,7 @@ class Matrix
         void set(size_t sr, size_t sc, int val);
         //workaround to have two arguments...
         friend Matrix operator+(const Matrix &a, const Matrix &b);
-        vector<int>& operator[](const int index);
+        int operator()(const int row, const int col);
         friend ostream& operator<<(ostream& os, const Matrix &a);
 };
 

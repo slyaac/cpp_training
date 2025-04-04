@@ -51,7 +51,7 @@ TEST(MyTestSuite, coverage) {
 TEST(MyTestSuite, coverage2) {
     // Your test code here
     Matrix neo1(1,1);
-    neo1[0][0] = 99;
+    int z = neo1(0,0);
     EXPECT_TRUE(1==1);
 }
 

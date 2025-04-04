@@ -6,14 +6,10 @@
 6) Klasa Matrix ma działać na szablonach
 */
 /* statyczna implementacja + T */
-vector<int>& Matrix::operator[](const int index)
+int Matrix::operator()(const int row, const int col)
 {
-    return data[index]; 
-    /*
-    int Matrix::operator[](wiersz, col) //[3,3]
-    return data[weirsz][col]
-     */
-}/* readonly */
+    return data[row][col]; 
+}
 
 Matrix operator+(const Matrix &a, const Matrix &b)
 {
