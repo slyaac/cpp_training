@@ -1,10 +1,24 @@
 #include "array.hpp"
 #include <iostream>
 
+static int fibo(int n)
+{
+    int value;
+    if(n > 1)
+    {
+        value =  fibo(n - 1) + fibo(n - 2);
+    }
+    else
+    {
+        value = n;
+    }
+
+    return value;
+}
 
 int main()
 {
-    cout << "Docker!" << endl;
+    cout << "Fibo = "<< fibo(40) << endl;
 
     Matrix<int> neo1(3,3,0);
     neo1.set(0,0,7);
