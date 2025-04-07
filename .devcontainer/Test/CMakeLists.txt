@@ -24,7 +24,7 @@ if(MYFLAG STREQUAL  "OFF")
     add_executable(myCode array.cpp main.cpp)
 endif()
 ##
-target_compile_options(myCode PUBLIC -fprofile-arcs -ftest-coverage)
+target_compile_options(myCode PUBLIC -fprofile-arcs -ftest-coverage -fconstexpr-ops-limit=536870912)
 target_link_options(myCode PUBLIC -fprofile-arcs -ftest-coverage)
 
 # Link GTest libraries

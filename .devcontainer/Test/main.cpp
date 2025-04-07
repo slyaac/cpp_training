@@ -1,9 +1,9 @@
 #include "array.hpp"
 #include <iostream>
 
-static int fibo(int n)
+static constexpr int fibo(int n)
 {
-    int value;
+    int value = 0;
     if(n > 1)
     {
         value =  fibo(n - 1) + fibo(n - 2);
@@ -18,8 +18,6 @@ static int fibo(int n)
 
 int main()
 {
-    cout << "Fibo = "<< fibo(40) << endl;
-
     Matrix<int> neo1(3,3,0);
     neo1.set(0,0,7);
     neo1.set(1,1,4); 
@@ -40,6 +38,8 @@ int main()
         std::cerr << e.what() << '\n';
     }    
     
+    constexpr int result = fibo(39);
+    cout << "Fibo = "<< result <<", Hex = 0x"<< hex << uppercase << result << endl;
 
     return 0;
 }
