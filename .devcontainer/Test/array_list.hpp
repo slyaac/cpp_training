@@ -118,27 +118,40 @@ class OtherArray
                 }
             }
 #else
-            cout<<"Threds"<<endl;
-            auto compute_row = [&](unsigned int row) 
+            cout<<"Threads"<<endl;
+            // Ensure the number of threads does not exceed the number of rows
+            unsigned int num_threads = 10;
+            num_threads = std::min(num_threads, rows);
+
+            // Lambda to compute rows
+            auto compute_rows = [&](unsigned int start_row, unsigned int end_row) 
             {
-                for (unsigned int col = 0; col < otherCols; ++col) 
+                for (unsigned int row = start_row; row < end_row; ++row) 
                 {
-                    U sum = 0;
-                    for (unsigned int k = 0; k < cols; ++k) 
+                    for (unsigned int col = 0; col < otherCols; ++col) 
                     {
-                        sum += this->at(row, k) * other.at(k, col);
+                        U sum = 0;
+                        for (unsigned int k = 0; k < cols; ++k) 
+                        {
+                            sum += this->at(row, k) * other.at(k, col);
+                        }
+                        result.at(row, col) = sum;
                     }
-                    result.at(row, col) = sum;
-                }
             };
+    
+            // Divide rows across threads
+            std::vector<std::thread> threads;
+            unsigned int rows_per_thread = rows / num_threads;
+            unsigned int extra_rows = rows % num_threads;
 
-            // Create threads to compute each row of the result matrix
-            vector<thread> threads;
-            for (unsigned int row = 0; row < rows; ++row) 
+            unsigned int start_row = 0;
+            for (unsigned int t = 0; t < num_threads; ++t) 
             {
-                threads.emplace_back(compute_row, row);
+                unsigned int end_row = start_row + rows_per_thread + (t < extra_rows ? 1 : 0);
+                threads.emplace_back(compute_rows, start_row, end_row);
+                start_row = end_row;
             }
-
+    
             // Join all threads
             for (auto& thread : threads) 
             {
