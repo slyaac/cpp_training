@@ -15,6 +15,23 @@ class OtherArray
 
     public:
     OtherArray() : l_data(rows, list<U>(cols, 0)){}
+    //brace initial
+    OtherArray(initializer_list<initializer_list<U>> data) : l_data(rows, list<U>(cols, 0))
+    {
+        //todo errors
+        size_t i = 0, j = 0;
+        for(const auto& row : data)
+        {
+            j = 0;
+            for(const auto& element : row)
+            {
+                //cout<< element<<" "<<i<<" "<<j<<endl;
+                a_set(i,j,element);
+                j++;
+            }
+            i++;
+        }
+    }
 
     /* expansion 
        OtherArray()
@@ -49,7 +66,7 @@ class OtherArray
             return os;
        }
 
-        void set(unsigned int row, unsigned int col, const U& value) 
+        void a_set(unsigned int row, unsigned int col, const U& value) 
         {
             auto rowIt = l_data.begin();
             std::advance(rowIt, row);
