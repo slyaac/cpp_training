@@ -4,6 +4,9 @@
 #include <iostream>
 #include <list>
 #include <iomanip>
+#include <thread>
+#include <stdexcept>
+#include <vector>
 
 using namespace std;
 
@@ -98,7 +101,8 @@ class OtherArray
         else
         {
             OtherArray<U, rows, otherCols> result;
-
+#if 1
+            cout<<"normal"<<endl;
             // Multiply each element (i, j) of the result.
             for (unsigned int i = 0; i < rows; ++i) 
             {
@@ -113,6 +117,34 @@ class OtherArray
                     result.at(i, j) = sum;
                 }
             }
+#else
+            cout<<"Threds"<<endl;
+            auto compute_row = [&](unsigned int row) 
+            {
+                for (unsigned int col = 0; col < otherCols; ++col) 
+                {
+                    U sum = 0;
+                    for (unsigned int k = 0; k < cols; ++k) 
+                    {
+                        sum += this->at(row, k) * other.at(k, col);
+                    }
+                    result.at(row, col) = sum;
+                }
+            };
+
+            // Create threads to compute each row of the result matrix
+            vector<thread> threads;
+            for (unsigned int row = 0; row < rows; ++row) 
+            {
+                threads.emplace_back(compute_row, row);
+            }
+
+            // Join all threads
+            for (auto& thread : threads) 
+            {
+                thread.join();
+            }
+#endif
             return result;
         }
     }
