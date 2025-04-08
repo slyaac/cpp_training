@@ -1,0 +1,29 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+ 
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "cppdbg",
+            "request": "launch",
+            "name": "Debug",
+            "program": "${workspaceFolder}/.devcontainer/Test/build/myCode", // Path to the test executable
+            "args": [], // Add any arguments for the executable here
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}/.devcontainer/Test/build", // Set the working directory
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb", // Path to GDB
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}

@@ -32,3 +32,5 @@ target_link_libraries(myCode ${GTEST_LIBRARIES} pthread -lgcov)
 
 # Add test cases
 add_test(NAME myCode COMMAND myCode)
+
+set(CMAKE_BUILD_TYPE Debug)
