@@ -46,14 +46,18 @@ int main()
     cout << "Fibo = "<< result <<", Hex = 0x"<< hex << uppercase << result << endl;
 #endif
     OtherArray<int, 4, 4> list_array;
-    list_array.a_set(0,0,1);
-    list_array.a_set(1,1,2);
-    list_array.a_set(2,2,3);
-    list_array.a_set(3,3,4);
-    cout<<list_array;
+    list_array.at(0,0) = 1;
+    list_array.at(1,1) = 2;
+    list_array.at(2,2) = 3;
+    list_array.at(3,3) = 4;
+    cout<<"m1:"<<endl<<list_array;
 
     OtherArray<int, 4, 2> list_array2({{0,1},{2,3},{3,4},{4,5}});
-    cout<<list_array2;
+    cout<<"m2:"<<endl<<list_array2;
+
+    OtherArray<int, 4, 2> result = list_array * list_array2;
+
+    cout<<"Result:"<<endl<<result;
     
     return 0;
 }
