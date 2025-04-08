@@ -1,6 +1,7 @@
 #include "array_vector.hpp"
 #include "array_list.hpp"
 #include <iostream>
+#include <chrono> 
 
 #define ARRAY_MUL
 
@@ -45,19 +46,24 @@ int main()
     constexpr int result = fibo(10);
     cout << "Fibo = "<< result <<", Hex = 0x"<< hex << uppercase << result << endl;
 #endif
-    OtherArray<int, 4, 4> list_array;
+#ifdef ARRAY_MUL
+    OtherArray<int, 150, 150> list_array;
     list_array.at(0,0) = 1;
     list_array.at(1,1) = 2;
     list_array.at(2,2) = 3;
     list_array.at(3,3) = 4;
-    cout<<"m1:"<<endl<<list_array;
+    //cout<<"m1:"<<endl<<list_array;
 
-    OtherArray<int, 4, 2> list_array2({{0,1},{2,3},{3,4},{4,5}});
-    cout<<"m2:"<<endl<<list_array2;
+    OtherArray<int, 150, 50> list_array2;//({{0,1},{2,3},{3,4},{4,5}});
+    //cout<<"m2:"<<endl<<list_array2;
+    auto start = chrono::high_resolution_clock::now();
+    OtherArray<int, 150, 50> result = list_array * list_array2;
+    auto end = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
 
-    OtherArray<int, 4, 2> result = list_array * list_array2;
+    //cout<<"Result:"<<endl<<result<<endl;
+    cout<<"took:"<<duration.count()<<" ms"<<endl;
+#endif
 
-    cout<<"Result:"<<endl<<result;
-    
     return 0;
 }

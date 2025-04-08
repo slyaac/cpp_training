@@ -14,7 +14,7 @@ class OtherArray
     list<list<U>> data;  
 
     public:
-    OtherArray() : data(rows, list<U>(cols, 0)){}
+    OtherArray() : data(rows, list<U>(cols, 1)){}
     //brace initial
     OtherArray(const initializer_list<initializer_list<U>> init) : data(rows, list<U>(cols, 0))
     {
