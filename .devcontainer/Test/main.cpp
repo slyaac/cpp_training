@@ -3,7 +3,7 @@
 #include <iostream>
 #include <chrono> 
 
-#define ARRAY_MUL
+#define VECTOR_ARRAY_MUL
 
 static constexpr int fibo(int n)
 {
@@ -46,7 +46,7 @@ int main()
     constexpr int result = fibo(10);
     cout << "Fibo = "<< result <<", Hex = 0x"<< hex << uppercase << result << endl;
 #endif
-#ifdef ARRAY_MUL
+#ifdef LIST_ARRAY_MUL
     OtherArray<int, 150, 150> list_array;
     list_array.at(0,0) = 1;
     list_array.at(1,1) = 2;
@@ -63,6 +63,21 @@ int main()
 
     //cout<<"Result:"<<endl<<result<<endl;
     cout<<"took:"<<duration.count()<<" ms"<<endl;
+#endif
+
+#ifdef VECTOR_ARRAY_MUL
+    Matrix<int> matA(150, 150);
+    Matrix<int> matB(150, 150);
+
+    auto start = chrono::high_resolution_clock::now();
+    auto result = matA * matB;
+    auto end = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
+
+    //cout<<"Result:"<<endl<<result<<endl;
+    cout<<"took:"<<duration.count()<<" ms"<<endl;
+
+
 #endif
 
     return 0;

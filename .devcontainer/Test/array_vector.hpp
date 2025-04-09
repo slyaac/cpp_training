@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include <thread>
 
 using namespace std;
 
@@ -14,6 +15,14 @@ class Matrix
         vector<vector<T>> data;
 
     public:
+
+    int rows() const { return data.size(); }
+    int cols() const { return data[0].size(); }
+
+    std::vector<int>& operator[](int row) { return data[row]; }
+    const std::vector<int>& operator[](int row) const { return data[row]; }
+
+    Matrix(int rows, int cols) : data(rows, std::vector<T>(cols, 0)) {}
 
     Matrix(size_t r, size_t c, const T& defaultValue)
     {
@@ -94,6 +103,44 @@ class Matrix
 
     return os;
    }
+
+   Matrix<T> operator*(const Matrix& other) const {
+    if (cols() != other.rows()) {
+        throw std::invalid_argument("Matrix dimensions do not match for multiplication!");
+    }
+
+    Matrix result(rows(), other.cols());
+    std::vector<std::thread> threads;
+
+    // Lambda for row-wise multiplication
+    auto multiplyRow = [&](int row) {
+        for (int j = 0; j < other.cols(); ++j) {
+            result[row][j] = 0;
+            for (int k = 0; k < cols(); ++k) {
+                result[row][j] += data[row][k] * other[k][j];
+            }
+        }
+    };
+#if 0
+    cout <<"threads"<<endl;
+    // Create threads for each row
+    for (int i = 0; i < rows(); ++i) {
+        threads.push_back(std::thread(multiplyRow, i));
+    }
+
+    // Join all threads
+    for (auto& th : threads) {
+        th.join();
+    }
+#else
+    cout <<"normal"<<endl;
+    for (int i = 0; i < rows(); ++i) 
+    {
+        multiplyRow(i);
+    }
+#endif
+    return result;
+}
    
 };
 
