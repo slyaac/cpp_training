@@ -3,8 +3,6 @@
 #include <iostream>
 #include <chrono> 
 
-#define VECTOR_ARRAY_MUL
-
 static constexpr int fibo(int n)
 {
     int value = 0;
@@ -46,7 +44,7 @@ int main()
     constexpr int result = fibo(10);
     cout << "Fibo = "<< result <<", Hex = 0x"<< hex << uppercase << result << endl;
 #endif
-#ifdef LIST_ARRAY_MUL
+#if 0
     OtherArray<int, 150, 150> list_array;
     list_array.at(0,0) = 1;
     list_array.at(1,1) = 2;
@@ -65,7 +63,7 @@ int main()
     cout<<"took:"<<duration.count()<<" ms"<<endl;
 #endif
 
-#ifdef VECTOR_ARRAY_MUL
+#if 1
     Matrix<int> matA(150, 150);
     Matrix<int> matB(150, 150);
 
@@ -75,7 +73,18 @@ int main()
     auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
 
     //cout<<"Result:"<<endl<<result<<endl;
-    cout<<"took:"<<duration.count()<<" ms"<<endl;
+    cout<<"150 took:"<<duration.count()<<" ms"<<endl;
+
+    Matrix<int> matC(500, 500);
+    Matrix<int> matD(500, 500);
+
+    start = chrono::high_resolution_clock::now();
+    auto result2 = matC * matD;
+    end = chrono::high_resolution_clock::now();
+    duration = chrono::duration_cast<chrono::milliseconds>(end - start);
+
+    //cout<<"Result:"<<endl<<result<<endl;
+    cout<<"500 took:"<<duration.count()<<" ms"<<endl;
 
 
 #endif

@@ -105,7 +105,7 @@ class OtherArray
             {
                 OtherArray<U, rows, otherCols> result;
 
-                cout<<"normal"<<endl;
+
                 auto compute_rows = [&](unsigned int start_row, unsigned int end_row) 
                 {
                     for (unsigned int row = start_row; row < end_row; ++row) 
@@ -123,6 +123,7 @@ class OtherArray
                 };
 #if 0
                 // Multiply each element (i, j) of the result.
+                cout<<"normal"<<endl;
                 compute_rows(0, rows);
 #else
                 cout<<"Threads"<<endl;

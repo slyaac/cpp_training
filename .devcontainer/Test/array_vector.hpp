@@ -121,7 +121,7 @@ class Matrix
             }
         }
     };
-#if 0
+#if 1
     cout <<"threads"<<endl;
     // Create threads for each row
     for (int i = 0; i < rows(); ++i) {

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "array.hpp"
+#include "array_vector.hpp"
 
 TEST(MyTestSuite, NoException) {
     // Your test code here
