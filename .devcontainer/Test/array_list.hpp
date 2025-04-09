@@ -68,95 +68,88 @@ class OtherArray
 
             return os;
        }
-       U& at(unsigned int row, unsigned int col) {
-        if (row >= rows || col >= cols) {
-            throw std::out_of_range("OtherArray::at:W Index out of range.");
-        }
-        auto rowIt = data.begin();
-        std::advance(rowIt, row);  // Advance to the desired row.
-        auto colIt = rowIt->begin();
-        std::advance(colIt, col);  // Advance to the desired column.
-        return *colIt;
-    }
 
-    // Const overload of at(): uses cbegin() to work on const data.
-    const U& at(unsigned int row, unsigned int col) const {
-        if (row >= rows || col >= cols) {
-            throw std::out_of_range("OtherArray::at:R Index out of range.");
-        }
-        auto rowIt = data.cbegin();  // Use const iterator.
-        std::advance(rowIt, row);
-        auto colIt = rowIt->cbegin();  // Use const iterator for the inner list.
-        std::advance(colIt, col);
-        return *colIt;
-    }
-
-    template <unsigned int otherCols>
-    OtherArray<U, rows, otherCols> operator*(const OtherArray<U, cols, otherCols>& other) const 
-    {
-        if(data.size() != cols)
-        {
-            throw runtime_error("invalid size");
-        }
-        else
-        {
-            OtherArray<U, rows, otherCols> result;
-#if 1
-            cout<<"normal"<<endl;
-            // Multiply each element (i, j) of the result.
-            for (unsigned int i = 0; i < rows; ++i) 
-            {
-                for (unsigned int j = 0; j < otherCols; ++j) 
-                {
-                    U sum = 0;
-                    for (unsigned int k = 0; k < cols; ++k) 
-                    {
-                        // Use our at() functions, which in a const context call the const overload.
-                        sum += this->at(i, k) * other.at(k, j);
-                    }
-                    result.at(i, j) = sum;
-                }
+       U& at(unsigned int row, unsigned int col) 
+       {
+            if (row >= rows || col >= cols) {
+                throw std::out_of_range("OtherArray::at:W Index out of range.");
             }
-#else
-            cout<<"Threads"<<endl;
-            // Ensure the number of threads does not exceed the number of rows
-            unsigned int num_threads = 10;
-            num_threads = std::min(num_threads, rows);
+            auto rowIt = data.begin();
+            std::advance(rowIt, row);  // Advance to the desired row.
+            auto colIt = rowIt->begin();
+            std::advance(colIt, col);  // Advance to the desired column.
+            return *colIt;
+        }
 
-            // Lambda to compute rows
-            auto compute_rows = [&](unsigned int start_row, unsigned int end_row) 
+        // Const overload of at(): uses cbegin() to work on const data.
+        const U& at(unsigned int row, unsigned int col) const 
+        {
+            if (row >= rows || col >= cols) {
+                throw std::out_of_range("OtherArray::at:R Index out of range.");
+            }
+            auto rowIt = data.cbegin();  // Use const iterator.
+            std::advance(rowIt, row);
+            auto colIt = rowIt->cbegin();  // Use const iterator for the inner list.
+            std::advance(colIt, col);
+            return *colIt;
+        }
+
+        template <unsigned int otherCols>
+        OtherArray<U, rows, otherCols> operator*(const OtherArray<U, cols, otherCols>& other) const 
+        {
+            if(data.size() != cols)
             {
-                for (unsigned int row = start_row; row < end_row; ++row) 
+                throw runtime_error("invalid size");
+            }
+            else
+            {
+                OtherArray<U, rows, otherCols> result;
+
+                cout<<"normal"<<endl;
+                auto compute_rows = [&](unsigned int start_row, unsigned int end_row) 
                 {
-                    for (unsigned int col = 0; col < otherCols; ++col) 
+                    for (unsigned int row = start_row; row < end_row; ++row) 
                     {
-                        U sum = 0;
-                        for (unsigned int k = 0; k < cols; ++k) 
+                        for (unsigned int col = 0; col < otherCols; ++col) 
                         {
-                            sum += this->at(row, k) * other.at(k, col);
+                            U sum = 0;
+                            for (unsigned int k = 0; k < cols; ++k) 
+                            {
+                                sum += this->at(row, k) * other.at(k, col);
+                            }
+                            result.at(row, col) = sum;
                         }
-                        result.at(row, col) = sum;
                     }
-            };
+                };
+#if 0
+                // Multiply each element (i, j) of the result.
+                compute_rows(0, rows);
+#else
+                cout<<"Threads"<<endl;
+                std::vector<std::thread> threads;
+                const size_t num_of_threads = ((rows * otherCols) < std::thread::hardware_concurrency()) ? (rows * otherCols) : (std::thread::hardware_concurrency());
+                const size_t rows_per_thread = (rows / num_of_threads) + 1;
+                threads.reserve(num_of_threads);
+                std::cout << "Reserved space in vector for " << threads.capacity() << " threads!" << std::endl;
+                // Divide rows across threads
+                
+                size_t row_start = 0;
+                size_t row_end = rows_per_thread;
     
-            // Divide rows across threads
-            std::vector<std::thread> threads;
-            unsigned int rows_per_thread = rows / num_threads;
-            unsigned int extra_rows = rows % num_threads;
-
-            unsigned int start_row = 0;
-            for (unsigned int t = 0; t < num_threads; ++t) 
-            {
-                unsigned int end_row = start_row + rows_per_thread + (t < extra_rows ? 1 : 0);
-                threads.emplace_back(compute_rows, start_row, end_row);
-                start_row = end_row;
-            }
+                while (row_end - row_start > 0)
+                {
+                    threads.push_back(std::thread(compute_rows, row_start, row_end));
+                    row_start = row_end;
+                    row_end += rows_per_thread;
+                    row_end = row_end < rows ? row_end : rows;
+                }
     
-            // Join all threads
-            for (auto& thread : threads) 
-            {
-                thread.join();
-            }
+        
+                // Join all threads
+                for (auto& t : threads) 
+                {
+                    t.join();
+                }
 #endif
             return result;
         }
