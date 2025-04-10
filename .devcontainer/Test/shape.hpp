@@ -6,18 +6,26 @@
 
 namespace shape{
 
+    template <typename T1, typename T2>
+    struct MyPair {
+        T1 x; // Custom name for 'first'
+        T2 y; // Custom name for 'second'
+
+        MyPair(const T1& first = 0, const T2& second = 0) : x(first), y(second) {}
+    };
+
     class Shape
     {
         public:
             double area;
             double circuit;
-            std::pair<int,int> border;
-            std::pair<int,int> center;
+            MyPair<MyPair<double,double>,MyPair<double,double>> border;
+            MyPair<double,double> center;
             string name;
             string type;
             string command;
 
-            Shape(const string n, const string t, pair<int,int> c) : name(n), type(t), center(c){}
+            Shape(const string n, const string t, MyPair<int,int> c) : name(n), type(t), center(c.x, c.y){}
 
             virtual void computeArea() = 0;
             virtual void computeCircuit() = 0;
@@ -36,14 +44,14 @@ namespace shape{
                 plotShape(name,type,border,command);
             }
 
-            void plotShape(string sN, string tN, pair<int,int> b,string sCmd)
+            void plotShape(string sN, string tN, MyPair<MyPair<double,double>,MyPair<double,double>> b,string sCmd)
             {
                 // Create a Gnuplot script file
                 std::ofstream script("shapes.gnuplot");
                 script << "set terminal pngcairo size 800,800\n";
                 script << "set output '"<<sN<<".png'\n";
-                script << "set xrange ["<<b.first<<":"<<b.second<<"]\n";
-                script << "set yrange ["<<b.first<<":"<<b.second<<"]\n";
+                script << "set xrange ["<<b.x.x<<":"<<b.x.y<<"]\n";
+                script << "set yrange ["<<b.y.x<<":"<<b.y.y<<"]\n";
                 script << "unset key\n";
                 script << "set object 1 "<<tN;
                 script << sCmd;
@@ -64,6 +72,12 @@ namespace shape{
             string getName()
             {
                 return name;
+            }
+
+            string p2s(MyPair<double,double> p)
+            {
+                string text = to_string(p.x) + "," +  to_string(p.y);
+                return text;
             }
     };
 
@@ -87,12 +101,13 @@ namespace shape{
                 return 0;
             }
 
-            Wheel(double x, const string n = "Wheel") : r(x), Shape(n,"circle", make_pair(0,0))
+            Wheel(double x, const string n = "Wheel") : r(x), Shape(n,"circle", {0,0})
             {
                 //assumption we are starting draw at center
-                border.first = center.first - static_cast<unsigned int>(ceil(1.5 * r));
-                border.second = center.second + static_cast<unsigned int>(ceil(1.5 * r));
-                command = " at "+ to_string(center.first) + "," + to_string(center.second) +" size " + std::to_string(r) + " ";
+                border.x.x = center.x - (ceil(1.5 * r));
+                border.x.y = center.y + (ceil(1.5 * r));
+                border.y = border.x;
+                command = " at "+ p2s(center) +" size " + std::to_string(r) + " ";
                 computeArea();
                 computeCircuit();
             }
@@ -119,15 +134,18 @@ namespace shape{
                 return 4;
             }
 
-            Rectangle(double x, const string n = "Rectangle") : a(x),  Shape(n,"rectangle", make_pair(0,0))
+            Rectangle(double x, const string n = "Rectangle") : a(x),  Shape(n,"rectangle", {0,0})
             {
                 //assumption we are starting draw at center
-                border.first = center.first - a;
-                border.second = center.second + a;
-                double c1 = center.first - a/2;
-                double c2 = center.second + a/2;
-                command = " from " + std::to_string(c1) + "," + std::to_string(c2) + " to "\
-                        + std::to_string(c1+a) + "," + std::to_string(c2-a) + " ";
+                border.x.x = center.x - a;
+                border.x.y = center.y + a;
+                border.y = border.x;
+                MyPair <double, double> c1, c2;
+                c1.x = center.x - a/2;
+                c1.y = center.y - a/2;
+                c2.x = c1.x + a;
+                c2.y = c1.y + a;
+                command = " from " + p2s(c1) + " to " + p2s(c2) + " ";
                 computeArea();
                 computeCircuit();
             }
@@ -154,17 +172,24 @@ namespace shape{
                 return 3;
             }
 
-            Triangle(double x, double y, const string n = "Triangle") : a(x), h(y),   Shape(n,"polygon", make_pair(0,0))
+            Triangle(double x, double y, const string n = "Triangle") : a(x), h(y),   Shape(n,"polygon", {0,0})
             {
                 //assumption we are starting draw at center
-                border.first = center.first - a;
-                border.second = center.second + a;
-                double x0 = center.first - a/2;
-                double y0 = center.second;
-                command = " from " + std::to_string(x0) + "," + std::to_string(y0) + " to "\
-                        + std::to_string(x0+a) + "," + std::to_string(y0) + " to "\
-                        + std::to_string(x0+a/2) + "," + std::to_string(h) + " to "\
-                        + std::to_string(x0) + "," + std::to_string(y0);
+                border.x.x = center.x - a;
+                border.x.y = center.x + a;
+                border.y.x = center.y - h;
+                border.y.y = center.y + 2*h;
+                MyPair <double, double> c1, c2, c3;
+                c1.x = center.x - a/2;
+                c1.y = center.y;
+                c2.x = c1.x + a;
+                c2.y = c1.y;
+                c3.x = c1.x + a/2;
+                c3.y = c1.y + h;
+                command = " from " + p2s(c1) + " to "\
+                        + p2s(c2) + " to "\
+                        + p2s(c3) + " to "\
+                        + p2s(c1);
 
                 computeArea();
                 computeCircuit();
