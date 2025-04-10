@@ -101,5 +101,10 @@ int main()
     ptr->drawMe();
     ptr->printInfo();
 
+    shape::Triangle tri(10,5);
+    ptr = &tri;
+    ptr->drawMe();
+    ptr->printInfo();
+
     return 0;
 }

@@ -133,6 +133,44 @@ namespace shape{
             }
             
     };
+
+    class Triangle : public Shape //rownoramienny
+    {
+        private:
+            double a,h;
+        public:
+            void computeArea()
+            {
+                area = 0.5 * a * h;
+            }
+
+            void computeCircuit()
+            {
+                circuit = a + 2 * sqrt(( (0.5 * a) * (0.5 * a) ) + (h * h));
+            }
+
+            unsigned int getCorners()
+            {
+                return 3;
+            }
+
+            Triangle(double x, double y, const string n = "Triangle") : a(x), h(y),   Shape(n,"polygon", make_pair(0,0))
+            {
+                //assumption we are starting draw at center
+                border.first = center.first - a;
+                border.second = center.second + a;
+                double x0 = center.first - a/2;
+                double y0 = center.second;
+                command = " from " + std::to_string(x0) + "," + std::to_string(y0) + " to "\
+                        + std::to_string(x0+a) + "," + std::to_string(y0) + " to "\
+                        + std::to_string(x0+a/2) + "," + std::to_string(h) + " to "\
+                        + std::to_string(x0) + "," + std::to_string(y0);
+
+                computeArea();
+                computeCircuit();
+            }
+            
+    };
 }
 
 #endif
