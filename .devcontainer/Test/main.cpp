@@ -90,10 +90,11 @@ int main()
 
 #endif
 
-    shape::Wheel wheel(3);
+    shape::Wheel wheel(1.5);
     shape::Shape *ptr;
     ptr = &wheel;
     cout <<"object : "<<ptr->getName()<<" area : "<<ptr->getArea()<<" circiut : "<<ptr->getCircuit()<<" corners : "<<ptr->getCorners()<<endl;
-    
+    ptr->drawMe();
+
     return 0;
 }
