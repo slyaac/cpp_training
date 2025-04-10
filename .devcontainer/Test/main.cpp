@@ -93,8 +93,13 @@ int main()
     shape::Wheel wheel(1.5);
     shape::Shape *ptr;
     ptr = &wheel;
-    cout <<"object : "<<ptr->getName()<<" area : "<<ptr->getArea()<<" circiut : "<<ptr->getCircuit()<<" corners : "<<ptr->getCorners()<<endl;
     ptr->drawMe();
+    ptr->printInfo();
+
+    shape::Rectangle rect(10);
+    ptr = &rect;
+    ptr->drawMe();
+    ptr->printInfo();
 
     return 0;
 }
