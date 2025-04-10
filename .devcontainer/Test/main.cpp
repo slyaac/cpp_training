@@ -91,20 +91,26 @@ int main()
 #endif
 
     shape::Wheel wheel(1.5);
-    shape::Shape *ptr;
-    ptr = &wheel;
-    ptr->drawMe();
-    ptr->printInfo();
-
     shape::Rectangle rect(10);
-    ptr = &rect;
-    ptr->drawMe();
-    ptr->printInfo();
-
     shape::Triangle tri(10,5);
-    ptr = &tri;
-    ptr->drawMe();
-    ptr->printInfo();
+
+    vector<shape::Shape *> vptr = { &wheel, &rect, &tri};
+    vector<unique_ptr<shape::Shape>> uptr;
+    uptr.push_back(make_unique<shape::Wheel>(2));
+    uptr.push_back(make_unique<shape::Rectangle>(5));
+    uptr.push_back(make_unique<shape::Triangle>(3,3));
+
+    for(auto& obj : vptr)
+    {
+        obj->drawMe();
+        obj->printInfo();
+    }
+
+    for(auto& obj : uptr)
+    {
+        obj->drawMe();
+        obj->printInfo();
+    }
 
     return 0;
 }
