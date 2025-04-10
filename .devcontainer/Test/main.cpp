@@ -2,6 +2,7 @@
 #include "array_list.hpp"
 #include <iostream>
 #include <chrono> 
+#include "shape.hpp"
 
 static constexpr int fibo(int n)
 {
@@ -63,7 +64,7 @@ int main()
     cout<<"took:"<<duration.count()<<" ms"<<endl;
 #endif
 
-#if 1
+#if 0
     Matrix<int> matA(150, 150);
     Matrix<int> matB(150, 150);
 
@@ -89,5 +90,10 @@ int main()
 
 #endif
 
+    shape::Wheel wheel(3);
+    shape::Shape *ptr;
+    ptr = &wheel;
+    cout <<"object : "<<ptr->getName()<<" area : "<<ptr->getArea()<<" circiut : "<<ptr->getCircuit()<<" corners : "<<ptr->getCorners()<<endl;
+    
     return 0;
 }
