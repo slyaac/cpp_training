@@ -12,6 +12,12 @@ namespace shape{
             double area;
             double circuit;
             std::pair<int,int> border;
+            std::pair<int,int> center;
+            string name;
+            string type;
+            string command;
+
+            Shape(const string n, const string t, pair<int,int> c) : name(n), type(t), center(c){}
 
             virtual void computeArea() = 0;
             virtual void computeCircuit() = 0;
@@ -25,8 +31,10 @@ namespace shape{
                 return circuit;
             }
             virtual unsigned int getCorners() = 0;
-            virtual string getName() = 0;
-            virtual void drawMe() = 0;
+            void drawMe()
+            {
+                plotShape(name,type,border,command);
+            }
 
             void plotShape(string sN, string tN, pair<int,int> b,string sCmd)
             {
@@ -52,16 +60,17 @@ namespace shape{
             {
                 cout <<"Name = "<<getName()<<", area = "<<getArea()<<", circiut = "<<getCircuit()<<", corners = "<<getCorners()<<endl;
             }
+
+            string getName()
+            {
+                return name;
+            }
     };
 
     class Wheel : public Shape
     {
         private:
             double r;
-            string name;
-            string type;
-            std::pair<int,int> center;
-            string command;
         public:
             void computeArea()
             {
@@ -78,22 +87,12 @@ namespace shape{
                 return 0;
             }
 
-            string getName()
-            {
-                return name;
-            }
-
-            void drawMe()
-            {
-                plotShape(name,type,border,command);
-            }
-
-            Wheel(double x, const string n = "Wheel") : r(x), name(n), type("circle"), center(0,0)
+            Wheel(double x, const string n = "Wheel") : r(x), Shape(n,"circle", make_pair(0,0))
             {
                 //assumption we are starting draw at center
-                border.first = 0 - static_cast<unsigned int>(ceil(1.5 * r));
-                border.second = 0 + static_cast<unsigned int>(ceil(1.5 * r));
-                command = " at 0,0 size " + std::to_string(r) + " ";
+                border.first = center.first - static_cast<unsigned int>(ceil(1.5 * r));
+                border.second = center.second + static_cast<unsigned int>(ceil(1.5 * r));
+                command = " at "+ to_string(center.first) + "," + to_string(center.second) +" size " + std::to_string(r) + " ";
                 computeArea();
                 computeCircuit();
             }
@@ -104,10 +103,6 @@ namespace shape{
     {
         private:
             double a;
-            string name;
-            string type;
-            std::pair<int,int> start;
-            string command;
         public:
             void computeArea()
             {
@@ -124,25 +119,15 @@ namespace shape{
                 return 4;
             }
 
-            string getName()
-            {
-                return name;
-            }
-
-            void drawMe()
-            {
-                plotShape(name,type,border,command);
-            }
-
-            Rectangle(double x, const string n = "Rectangle") : a(x), name(n), type("rectangle"), start(0,0)
+            Rectangle(double x, const string n = "Rectangle") : a(x),  Shape(n,"rectangle", make_pair(0,0))
             {
                 //assumption we are starting draw at center
-                border.first = 0 - a;
-                border.second = 0 + a;
-                double c1 = 0 - a/2;
-                double c2 = 0 - a/2;
+                border.first = center.first - a;
+                border.second = center.second + a;
+                double c1 = center.first - a/2;
+                double c2 = center.second + a/2;
                 command = " from " + std::to_string(c1) + "," + std::to_string(c2) + " to "\
-                        + std::to_string(-c1) + "," + std::to_string(-c2) + " ";
+                        + std::to_string(c1+a) + "," + std::to_string(c2-a) + " ";
                 computeArea();
                 computeCircuit();
             }
