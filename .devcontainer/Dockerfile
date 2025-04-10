@@ -18,6 +18,7 @@ RUN if [ "${REINSTALL_CMAKE_VERSION_FROM_SOURCE}" != "none" ]; then \
     doxygen \
     elpa-graphviz-dot-mode \
     graphviz \
+    gnuplot-nox \
     && rm -rf /var/lib/apt/lists/*
 # [Optional] Uncomment this section to install additional vcpkg ports.
 # RUN su vscode -c "${VCPKG_ROOT}/vcpkg install <your-port-name-here>"
