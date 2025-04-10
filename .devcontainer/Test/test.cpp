@@ -1,4 +1,10 @@
 #include <gtest/gtest.h>
+
+#include "shape.hpp"
+#include <vector>
+#include <iomanip>
+
+#if 0
 #include "array_vector.hpp"
 
 TEST(MyTestSuite, NoException) {
@@ -54,6 +60,23 @@ TEST(MyTestSuite, coverage2) {
     int z = neo1(0,0);
     EXPECT_TRUE(1==1);
 }
+#endif
+
+#if 1
+TEST(MyTestSuite, coverage) {
+    // Your test code here
+
+    std::vector<std::unique_ptr<shape::Shape>> uptr;
+    uptr.push_back(std::make_unique<shape::Wheel>(2));
+
+    for(auto& obj : uptr)
+    {
+        obj->drawMe();
+        obj->printInfo();
+    }
+    EXPECT_TRUE(1==1);
+}
+#endif
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);

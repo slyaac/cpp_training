@@ -21,11 +21,11 @@ namespace shape{
             double circuit;
             MyPair<MyPair<double,double>,MyPair<double,double>> border;
             MyPair<double,double> center;
-            string name;
-            string type;
-            string command;
+            std::string name;
+            std::string type;
+            std::string command;
 
-            Shape(const string n, const string t, MyPair<int,int> c) : name(n), type(t), center(c.x, c.y){}
+            Shape(const std::string n, const std::string t, MyPair<int,int> c) : name(n), type(t), center(c.x, c.y){}
 
             virtual void computeArea() = 0;
             virtual void computeCircuit() = 0;
@@ -44,7 +44,7 @@ namespace shape{
                 plotShape(name,type,border,command);
             }
 
-            void plotShape(string sN, string tN, MyPair<MyPair<double,double>,MyPair<double,double>> b,string sCmd)
+            void plotShape(std::string sN, std::string tN, MyPair<MyPair<double,double>,MyPair<double,double>> b,std::string sCmd)
             {
                 // Create a Gnuplot script file
                 std::ofstream script("shapes.gnuplot");
@@ -66,17 +66,17 @@ namespace shape{
 
             void printInfo()
             {
-                cout <<"Name = "<<getName()<<", area = "<<getArea()<<", circiut = "<<getCircuit()<<", corners = "<<getCorners()<<endl;
+                std::cout <<"Name = "<<getName()<<", area = "<<getArea()<<", circiut = "<<getCircuit()<<", corners = "<<getCorners()<<std::endl;
             }
 
-            string getName()
+            std::string getName()
             {
                 return name;
             }
 
-            string p2s(MyPair<double,double> p)
+            std::string p2s(MyPair<double,double> p)
             {
-                string text = to_string(p.x) + "," +  to_string(p.y);
+                std::string text = std::to_string(p.x) + "," +  std::to_string(p.y);
                 return text;
             }
     };
@@ -101,7 +101,7 @@ namespace shape{
                 return 0;
             }
 
-            Wheel(double x, const string n = "Wheel") : r(x), Shape(n,"circle", {0,0})
+            Wheel(double x, const std::string n = "Wheel") : r(x), Shape(n,"circle", {0,0})
             {
                 //assumption we are starting draw at center
                 border.x.x = center.x - (ceil(1.5 * r));
@@ -134,7 +134,7 @@ namespace shape{
                 return 4;
             }
 
-            Rectangle(double x, const string n = "Rectangle") : a(x),  Shape(n,"rectangle", {0,0})
+            Rectangle(double x, const std::string n = "Rectangle") : a(x),  Shape(n,"rectangle", {0,0})
             {
                 //assumption we are starting draw at center
                 border.x.x = center.x - a;
@@ -172,7 +172,7 @@ namespace shape{
                 return 3;
             }
 
-            Triangle(double x, double y, const string n = "Triangle") : a(x), h(y),   Shape(n,"polygon", {0,0})
+            Triangle(double x, double y, const std::string n = "Triangle") : a(x), h(y),   Shape(n,"polygon", {0,0})
             {
                 //assumption we are starting draw at center
                 border.x.x = center.x - a;

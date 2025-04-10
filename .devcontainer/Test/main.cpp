@@ -1,8 +1,12 @@
-#include "array_vector.hpp"
-#include "array_list.hpp"
+//#include "array_vector.hpp"
+//#include "array_list.hpp"
 #include <iostream>
 #include <chrono> 
 #include "shape.hpp"
+#include <vector>
+#include <iomanip>
+
+using namespace std;
 
 static constexpr int fibo(int n)
 {
