@@ -109,12 +109,12 @@ int main()
         obj->drawMe();
         obj->printInfo();
     }
-
+#if 0
     for(auto& obj : uptr)
     {
         obj->drawMe();
         obj->printInfo();
     }
-
+#endif
     return 0;
 }
