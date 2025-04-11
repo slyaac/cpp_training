@@ -63,18 +63,50 @@ TEST(MyTestSuite, coverage2) {
 #endif
 
 #if 1
-TEST(MyTestSuite, coverage) {
-    // Your test code here
+// Test case for the Wheel class
+TEST(ShapeTest, WheelCorners) {
+    shape::Wheel<double> wheel(5.0);
+    EXPECT_EQ(wheel.getCorners(), 0); // A wheel has 0 corners
+}
 
-    std::vector<std::unique_ptr<shape::Shape>> uptr;
-    uptr.push_back(std::make_unique<shape::Wheel<int>>(2));
+// Test case for the Rectangle class
+TEST(ShapeTest, RectangleCorners) {
+    shape::Rectangle<int> rect(10);
+    EXPECT_EQ(rect.getCorners(), 4); // A rectangle has 4 corners
+}
 
-    for(auto& obj : uptr)
-    {
-        obj->drawMe();
-        obj->printInfo();
+// Test case for the Triangle class
+TEST(ShapeTest, TriangleCorners) {
+    shape::Triangle<int> tri(10, 5);
+    EXPECT_EQ(tri.getCorners(), 3); // A triangle has 3 corners
+}
+
+// Test polymorphic behavior with a vector of Shape pointers
+TEST(ShapeTest, Polymorphism) {
+    std::vector<std::unique_ptr<shape::Shape>> shapes;
+    shapes.push_back(std::make_unique<shape::Wheel<double>>(5.0));
+    shapes.push_back(std::make_unique<shape::Rectangle<int>>(10));
+    shapes.push_back(std::make_unique<shape::Triangle<int>>(10, 5));
+
+    std::vector<int> expectedCorners = {0, 4, 3};
+    for (size_t i = 0; i < shapes.size(); ++i) {
+        EXPECT_EQ(shapes[i]->getCorners(), expectedCorners[i]);
     }
-    EXPECT_TRUE(1==1);
+}
+
+// Test virtual functions like drawMe and printInfo
+TEST(ShapeTest, VirtualFunctions) {
+    shape::Rectangle<int> rect(10);
+    rect.drawMe();    // Ensure it doesn't crash (visual output may not be testable)
+    rect.printInfo(); // Same as above
+
+    SUCCEED(); // If no crash, the test succeeds
+}
+
+// Test constructor and resource cleanup
+TEST(ShapeTest, ConstructorDestructor) {
+    auto wheel = std::make_unique<shape::Wheel<double>>(10.5);
+    EXPECT_NO_THROW(wheel.reset()); // Destructor should not throw exceptions
 }
 #endif
 
