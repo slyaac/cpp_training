@@ -25,9 +25,21 @@ namespace shape{
             std::vector<MyPair<double, double>> ddata;
             std::string name;
 
+            void computeArea()
+            {
+                double a = 0.0;
+                int n = ddata.size();
+            
+                for (int i = 0; i < n; ++i) {
+                    int j = (i + 1) % n; // Wrap around to the first point
+                    a += ddata[i].x * ddata[j].y - ddata[i].y * ddata[j].x;
+                }
+            
+                area = abs(a) / 2.0; 
+            }
+
             Shape(const std::string n, MyPair<int,int> c) : name(n), center(c.x, c.y){}
 
-            virtual void computeArea() = 0;
             virtual void computeCircuit() = 0;
             double getArea()
             {
@@ -98,10 +110,6 @@ namespace shape{
         private:
             double r;
         public:
-            void computeArea()
-            {
-                area = r * r * M_PI;
-            }
 
             void computeCircuit()
             {
@@ -130,8 +138,8 @@ namespace shape{
                     i ? 0 : tail = p;
                 }
                 ddata.push_back(tail);
-                computeArea();
                 computeCircuit();
+                computeArea();
             }
             
     };
@@ -141,10 +149,6 @@ namespace shape{
         private:
             double a;
         public:
-            void computeArea()
-            {
-                area = a * a;
-            }
 
             void computeCircuit()
             {
@@ -172,8 +176,8 @@ namespace shape{
                 ddata.push_back(c4);
                 ddata.push_back(c1);
                 
-                computeArea();
                 computeCircuit();
+                computeArea();
             }
             
     };
@@ -183,10 +187,6 @@ namespace shape{
         private:
             double a,h;
         public:
-            void computeArea()
-            {
-                area = 0.5 * a * h;
-            }
 
             void computeCircuit()
             {
@@ -212,8 +212,8 @@ namespace shape{
                 ddata.push_back(c3);
                 ddata.push_back(c1);
 
-                computeArea();
                 computeCircuit();
+                computeArea();
             }
             
     };
