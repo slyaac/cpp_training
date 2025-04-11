@@ -14,18 +14,19 @@ namespace shape{
 
         MyPair(const T1& first = 0, const T2& second = 0) : x(first), y(second) {}
     };
-
+    
     class Shape
     {
         public:
             double area;
             double circuit;
-            MyPair<MyPair<double,double>,MyPair<double,double>> border;
+            MyPair<MyPair<int,int>,MyPair<int,int>> border;
             MyPair<double,double> center;
             std::vector<MyPair<double, double>> ddata;
             std::string name;
 
-            double calculateDistance(const MyPair<double, double>& p1, const MyPair<double, double>& p2) {
+            template <typename T1, typename T2>
+            double calculateDistance(const MyPair<T1, T2>& p1, const MyPair<T1, T2>& p2) {
                 return std::sqrt(std::pow(p2.x - p1.x, 2) + std::pow(p2.y - p1.y, 2));
             }
             void computeCircuit()
@@ -76,8 +77,8 @@ namespace shape{
                 createData(ddata);
                 plotShape(name, border);
             }
-
-            void plotShape(std::string sN, MyPair<MyPair<double,double>,MyPair<double,double>> b)
+            template <typename U>
+            void plotShape(std::string sN, MyPair<MyPair<U,U>,MyPair<U,U>> b)
             {
                 // Create a Gnuplot script file
                 std::ofstream script("shapes.gnuplot");
@@ -93,8 +94,8 @@ namespace shape{
                 // Execute the Gnuplot script
                 std::system("gnuplot shapes.gnuplot");
             }
-
-            void createData(std::vector<MyPair<double,double>> &data)
+            template <typename U>
+            void createData(std::vector<MyPair<U,U>> &data)
             {
                 std::ofstream file("points.dat");  // Create and open a file
                 if (!file.is_open()) {
@@ -120,10 +121,11 @@ namespace shape{
             }
     };
 
+    template <typename U>
     class Wheel : public Shape
     {
         private:
-            double r;
+            U r;
         public:
 
             unsigned int getCorners()
@@ -131,7 +133,7 @@ namespace shape{
                 return 0;
             }
 
-            Wheel(double x, const std::string n = "Wheel") : r(x), Shape(n, {0,0})
+            Wheel(U x, const std::string n = "Wheel") : r(x), Shape(n, {0,0})
             {
                 //assumption we are starting draw at center
                 border.x.x = center.x - (ceil(1.5 * r));
@@ -153,22 +155,22 @@ namespace shape{
             }
             
     };
-
+    template <typename U>
     class Rectangle : public Shape
     {
         private:
-            double a;
+            U a;
         public:
 
-            Rectangle(double x, const std::string n = "Rectangle") : a(x),  Shape(n, {0,0})
+            Rectangle(U x, const std::string n = "Rectangle") : a(x),  Shape(n, {0,0})
             {
                 //assumption we are starting draw at center
                 border.x.x = center.x - a;
                 border.x.y = center.y + a;
                 border.y = border.x;
                 MyPair<double, double> c1, c2, c3, c4;
-                c1.x = center.x - a/2;
-                c1.y = center.y - a/2;
+                c1.x = center.x - static_cast<double>(a)/2;
+                c1.y = center.y - static_cast<double>(a)/2;
                 c2.x = c1.x + a;
                 c2.y = c1.y;
                 c3.x =  c2.x;
@@ -186,14 +188,14 @@ namespace shape{
             }
             
     };
-
+    template <typename U>
     class Triangle : public Shape //rownoramienny
     {
         private:
-            double a,h;
+            U a,h;
         public:
 
-            Triangle(double x, double y, const std::string n = "Triangle") : a(x), h(y),   Shape(n, {0,0})
+            Triangle(U x, U y, const std::string n = "Triangle") : a(x), h(y),   Shape(n, {0,0})
             {
                 //assumption we are starting draw at center
                 border.x.x = center.x - a;
@@ -201,11 +203,11 @@ namespace shape{
                 border.y.x = center.y - h;
                 border.y.y = center.y + 2*h;
                 MyPair <double, double> c1, c2, c3;
-                c1.x = center.x - a/2;
+                c1.x = center.x - static_cast<double>(a)/2;
                 c1.y = center.y;
                 c2.x = c1.x + a;
                 c2.y = c1.y;
-                c3.x = c1.x + a/2;
+                c3.x = c1.x + static_cast<double>(a)/2;
                 c3.y = c1.y + h;
                 ddata.push_back(c1);
                 ddata.push_back(c2);

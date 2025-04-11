@@ -94,15 +94,15 @@ int main()
 
 #endif
 
-    shape::Wheel wheel(1.5);
-    shape::Rectangle rect(10);
-    shape::Triangle tri(10,5);
+    shape::Wheel<double> wheel(1.5);
+    shape::Rectangle<int> rect(10);
+    shape::Triangle<int> tri(10,5);
 
     vector<shape::Shape *> vptr = { &wheel, &rect, &tri};
     vector<unique_ptr<shape::Shape>> uptr;
-    uptr.push_back(make_unique<shape::Wheel>(2));
-    uptr.push_back(make_unique<shape::Rectangle>(5));
-    uptr.push_back(make_unique<shape::Triangle>(3,3));
+    uptr.push_back(make_unique<shape::Wheel<int>>(2));
+    uptr.push_back(make_unique<shape::Rectangle<int>>(5));
+    uptr.push_back(make_unique<shape::Triangle<int>>(3,3));
 
     for(auto& obj : vptr)
     {

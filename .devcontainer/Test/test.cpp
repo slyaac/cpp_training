@@ -67,7 +67,7 @@ TEST(MyTestSuite, coverage) {
     // Your test code here
 
     std::vector<std::unique_ptr<shape::Shape>> uptr;
-    uptr.push_back(std::make_unique<shape::Wheel>(2));
+    uptr.push_back(std::make_unique<shape::Wheel<int>>(2));
 
     for(auto& obj : uptr)
     {
