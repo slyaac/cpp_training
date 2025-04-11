@@ -25,6 +25,22 @@ namespace shape{
             std::vector<MyPair<double, double>> ddata;
             std::string name;
 
+            double calculateDistance(const MyPair<double, double>& p1, const MyPair<double, double>& p2) {
+                return std::sqrt(std::pow(p2.x - p1.x, 2) + std::pow(p2.y - p1.y, 2));
+            }
+            void computeCircuit()
+            {
+                double circumference = 0.0;
+                int n = ddata.size();
+            
+                for (int i = 0; i < n; ++i) {
+                    int j = (i + 1) % n; // Wrap around to the first point
+                    circumference += calculateDistance(ddata[i], ddata[j]);
+                }
+            
+                circuit = circumference;
+            }
+
             void computeArea()
             {
                 double a = 0.0;
@@ -40,7 +56,6 @@ namespace shape{
 
             Shape(const std::string n, MyPair<int,int> c) : name(n), center(c.x, c.y){}
 
-            virtual void computeCircuit() = 0;
             double getArea()
             {
                 return area;
@@ -111,11 +126,6 @@ namespace shape{
             double r;
         public:
 
-            void computeCircuit()
-            {
-                circuit = 2 * M_PI * r;
-            }
-
             unsigned int getCorners()
             {
                 return 0;
@@ -150,11 +160,6 @@ namespace shape{
             double a;
         public:
 
-            void computeCircuit()
-            {
-                circuit = 4 * a;
-            }
-
             Rectangle(double x, const std::string n = "Rectangle") : a(x),  Shape(n, {0,0})
             {
                 //assumption we are starting draw at center
@@ -187,11 +192,6 @@ namespace shape{
         private:
             double a,h;
         public:
-
-            void computeCircuit()
-            {
-                circuit = a + 2 * sqrt(( (0.5 * a) * (0.5 * a) ) + (h * h));
-            }
 
             Triangle(double x, double y, const std::string n = "Triangle") : a(x), h(y),   Shape(n, {0,0})
             {
