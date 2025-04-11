@@ -22,7 +22,12 @@ static constexpr int fibo(int n)
 
     return value;
 }
-
+template <typename... Args>
+std::vector<std::unique_ptr<shape::Shape>> makeVector(Args&&... args) {
+    std::vector<std::unique_ptr<shape::Shape>> vec;
+    (vec.push_back(std::forward<Args>(args)), ...);
+    return vec;
+}
 int main()
 {
 #ifdef ARRAY_ADD
@@ -99,21 +104,37 @@ int main()
     shape::Triangle<int> tri(10,5);
 
     vector<shape::Shape *> vptr = { &wheel, &rect, &tri};
-    vector<unique_ptr<shape::Shape>> uptr;
-    uptr.push_back(make_unique<shape::Wheel<int>>(2));
-    uptr.push_back(make_unique<shape::Rectangle<int>>(5));
-    uptr.push_back(make_unique<shape::Triangle<int>>(3,3));
+    auto uptr = makeVector(
+        std::make_unique<shape::Wheel<int>>(2),
+        std::make_unique<shape::Rectangle<int>>(5),
+        std::make_unique<shape::Triangle<int>>(3, 3)
+    );
+
+    vector<shape::Shape*> nptr = {
+        new shape::Wheel<double>(3),
+        new shape::Rectangle<int>(4),
+        new shape::Triangle<int>(5, 6)
+    };
 
     for(auto& obj : vptr)
     {
         obj->drawMe();
         obj->printInfo();
     }
-#if 0
+#if 1
     for(auto& obj : uptr)
     {
         obj->drawMe();
         obj->printInfo();
+    }
+#endif
+
+#if 1
+    for(auto& obj : nptr)
+    {
+        obj->drawMe();
+        obj->printInfo();
+        delete obj;
     }
 #endif
     return 0;

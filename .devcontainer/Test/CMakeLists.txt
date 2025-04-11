@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.18)
 project(CPP_TRAINING)
 
+set(CMAKE_CXX_STANDARD 17) # Set the C++ standard to C++17
+set(CMAKE_CXX_STANDARD_REQUIRED ON) # Ensure the C++17 standard is used
+
 #switch to define if ewe will rin GTEST or no
 option(MYFLAG "Enable Google Test" ON)
 
