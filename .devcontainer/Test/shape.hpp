@@ -119,6 +119,35 @@ namespace shape{
             {
                 return name;
             }
+            // Destructor - Rule of Three Point 1
+            // Responsible for releasing resources when the object is destroyed.
+            virtual ~Shape() {
+                // Example cleanup code (if required): dynamic memory or file handles
+            }
+            // Copy Constructor - Rule of Three Point 2
+            // Creates a new object as a copy of an existing object.
+            Shape(const Shape& other)
+            : area(other.area), circuit(other.circuit),
+            border(other.border), center(other.center),
+            ddata(other.ddata), name(other.name) {}
+
+            // Copy Assignment Operator - Rule of Three Point 3
+            // Handles assignment between objects, ensuring proper cleanup and copying.
+            
+            Shape& operator=(const Shape& other) 
+            {
+                if (this == &other) {  // Self-assignment check
+                    return *this;
+                }
+                // Copy all members from the source object
+                area = other.area;
+                circuit = other.circuit;
+                border = other.border;
+                center = other.center;
+                ddata = other.ddata;
+                name = other.name;
+                return *this;
+            }
     };
 
     template <typename U>
@@ -153,6 +182,24 @@ namespace shape{
                 computeCircuit();
                 computeArea();
             }
+            /* rules */
+            // Destructor (Inherited and Virtual)
+            ~Wheel() override {}
+
+            // Copy Constructor
+            Wheel(const Wheel<U>& other) 
+                : shape::Shape(other), r(other.r) {}
+
+            // Copy Assignment Operator
+            Wheel<U>& operator=(const Wheel<U>& other) 
+            {
+                if (this == &other) {
+                    return *this; // Self-assignment check
+                }
+                shape::Shape::operator=(other); // Base class copy
+                r = other.r;
+                return *this;
+            }
             
     };
     template <typename U>
@@ -186,8 +233,24 @@ namespace shape{
                 computeCircuit();
                 computeArea();
             }
-            
+            //rules
+            // Destructor
+            ~Rectangle() override {}
+
+            // Copy Constructor
+            Rectangle(const Rectangle<U>& other)
+                : shape::Shape(other), a(other.a) {}
+
+            // Copy Assignment Operator
+            Rectangle<U>& operator=(const Rectangle<U>& other) 
+            {
+                if (this == &other) return *this; // Self-assignment check
+                shape::Shape::operator=(other);  // Call base class copy assignment
+                a = other.a;
+                return *this;
+            }
     };
+
     template <typename U>
     class Triangle : public Shape //rownoramienny
     {
@@ -216,6 +279,23 @@ namespace shape{
 
                 computeCircuit();
                 computeArea();
+            }
+            //rules
+            // Destructor
+            ~Triangle() override {}
+
+            // Copy Constructor
+            Triangle(const Triangle<U>& other)
+                : shape::Shape(other), a(other.a), h(other.h) {}
+
+            // Copy Assignment Operator
+            Triangle<U>& operator=(const Triangle<U>& other) 
+            {
+                if (this == &other) return *this; // Self-assignment check
+                shape::Shape::operator=(other);  // Call base class copy assignment
+                a = other.a;
+                h = other.h;
+                return *this;
             }
             
     };
