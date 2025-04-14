@@ -24,6 +24,7 @@ namespace shape{
             MyPair<double,double> center;
             std::vector<MyPair<double, double>> ddata;
             std::string name;
+            double rotationAngle;
 
             template <typename T1, typename T2>
             double calculateDistance(const MyPair<T1, T2>& p1, const MyPair<T1, T2>& p2) {
@@ -119,6 +120,27 @@ namespace shape{
             {
                 return name;
             }
+
+
+            void rotate(double degrees) {
+                rotationAngle = degrees;
+        
+                // Ensure rotationAngle stays within the range of 0–360 degrees
+                if (rotationAngle >= 360.0) rotationAngle -= 360.0;
+                if (rotationAngle < 0.0) rotationAngle += 360.0;
+        
+                double radians = rotationAngle * M_PI / 180.0; // Convert to radians
+        
+                // Rotate all points
+                for (auto& point : ddata) {
+                    double xNew = point.x * cos(radians) - point.y * sin(radians);
+                    double yNew = point.x * sin(radians) + point.y * cos(radians);
+                    point.x = xNew;
+                    point.y = yNew;
+                }
+            }
+
+
             // Destructor - Rule of Three Point 1
             // Responsible for releasing resources when the object is destroyed.
             virtual ~Shape() {
@@ -155,6 +177,7 @@ namespace shape{
     {
         private:
             U r;
+            unsigned int res;
         public:
 
             unsigned int getCorners()
@@ -162,16 +185,16 @@ namespace shape{
                 return 0;
             }
 
-            Wheel(U x, const std::string n = "Wheel") : r(x), Shape(n, {0,0})
+            Wheel(U x, unsigned int res = 30, const std::string n = "Wheel") : res(res), r(x), Shape(n, {0,0})
             {
                 //assumption we are starting draw at center
                 border.x.x = center.x - (ceil(1.5 * r));
                 border.x.y = center.y + (ceil(1.5 * r));
                 border.y = border.x;
-                const unsigned int res = 30;
+                double offset = 0;// M_PI / 4; //90 // initial draw of firtst point is always (r,0)
                 MyPair<double, double> tail;;
                 for (int i = 0; i < res; ++i) {
-                    double angle = (2 * M_PI * i) / res;  // Angle in radians
+                    double angle = ((2 * M_PI * i) / res) + offset;  // Angle in radians
                     MyPair<double, double> p;
                     p.x = r * cos(angle) + center.x;
                     p.y = r * sin(angle) + center.y;

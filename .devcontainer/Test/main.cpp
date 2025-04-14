@@ -28,6 +28,30 @@ std::vector<std::unique_ptr<shape::Shape>> makeVector(Args&&... args) {
     (vec.push_back(std::forward<Args>(args)), ...);
     return vec;
 }
+#include <atomic>
+std::atomic<bool> running(true);
+std::atomic<int> rangle(0);
+
+void checkInput() {
+    string s_inpput;
+    while (running) {
+        std::cin  >> s_inpput;
+        if (s_inpput == "x") {
+            running = false; // End the loop gracefully
+        }
+        else
+        {
+            try {
+                rangle = std::stoi(s_inpput); // Convert string to integer
+        
+                // Perform actions with the integer value here
+            } catch (const std::invalid_argument&) {
+                std::cout << "Invalid input. Please enter a valid integer." << std::endl;
+            }
+        }
+    }
+}
+#include <thread>
 int main()
 {
 #ifdef ARRAY_ADD
@@ -104,6 +128,7 @@ int main()
     shape::Triangle<int> tri(10,5);
 
     vector<shape::Shape *> vptr = { &wheel, &rect, &tri};
+#if 0
     auto uptr = makeVector(
         std::make_unique<shape::Wheel<int>>(2),
         std::make_unique<shape::Rectangle<int>>(5),
@@ -115,13 +140,13 @@ int main()
         new shape::Rectangle<int>(4),
         new shape::Triangle<int>(5, 6)
     };
-
+#endif
     for(auto& obj : vptr)
     {
         obj->drawMe();
         obj->printInfo();
     }
-#if 1
+#if 0
     for(auto& obj : uptr)
     {
         obj->drawMe();
@@ -129,7 +154,7 @@ int main()
     }
 #endif
 
-#if 1
+#if 0
     for(auto& obj : nptr)
     {
         obj->drawMe();
@@ -137,5 +162,20 @@ int main()
         delete obj;
     }
 #endif
+
+shape::Wheel<double> poly(2,5);
+poly.drawMe();
+
+std::thread inputThread(checkInput);
+
+
+while (running) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(250)); // Simulate work
+    poly.rotate(rangle);
+    poly.drawMe();
+}
+
+
+    inputThread.join(); // Ensure the input thread is finished
     return 0;
 }
