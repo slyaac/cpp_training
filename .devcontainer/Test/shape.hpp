@@ -1,3 +1,8 @@
+/**
+ * @file shape.hpp
+ * @brief Defines geometric shapes including Wheel, Rectangle, Triangle, and their base class Shape.
+ */
+
 #ifndef SHAPE_H
 #define SHAPE_H
 #include <string>
@@ -5,31 +10,59 @@
 #include <fstream>
 #include <vector>
 
-namespace shape{
+#define USE_WHEEL_BASE
 
+namespace shape{
+    /**
+     * @brief Represents a pair of coordinates.
+     * 
+     * @tparam T1 Type of the first value.
+     * @tparam T2 Type of the second value.
+     */
     template <typename T1, typename T2>
     struct MyPair {
-        T1 x; // Custom name for 'first'
-        T2 y; // Custom name for 'second'
+        T1 x; ///< Custom name for 'first'
+        T2 y; ///<  Custom name for 'second'
 
+        /**
+         * @brief Constructs a pair with default or provided values.
+         * @param first Initial value for x.
+         * @param second Initial value for y.
+         */
         MyPair(const T1& first = 0, const T2& second = 0) : x(first), y(second) {}
     };
-    
+
+    /**
+     * @brief Abstract base class for shapes.
+     */
     class Shape
     {
         public:
-            double area;
-            double circuit;
-            MyPair<MyPair<int,int>,MyPair<int,int>> border;
-            MyPair<double,double> center;
-            std::vector<MyPair<double, double>> ddata;
-            std::string name;
-            double rotationAngle;
+            double area; ///< The area of the shape.
+            double circuit; ///< The circumference of the shape.
+            MyPair<MyPair<int,int>,MyPair<int,int>> border; ///< Draw border.
+            MyPair<double,double> center; ///< The center coordinates of the shape.
+            std::vector<MyPair<double, double>> ddata; ///< Points representing the shape geometry.
+            std::string name; ///< Name of the shape.
+            double rotationAngle; ///< Rotation angle of the shape.
 
+            /**
+             * @brief Calculates the distance between two points.
+             * 
+             * @tparam T1 Type of the x-coordinates.
+             * @tparam T2 Type of the y-coordinates.
+             * @param p1 The first point.
+             * @param p2 The second point.
+             * @return The distance between the two points.
+             */
             template <typename T1, typename T2>
             double calculateDistance(const MyPair<T1, T2>& p1, const MyPair<T1, T2>& p2) {
                 return std::sqrt(std::pow(p2.x - p1.x, 2) + std::pow(p2.y - p1.y, 2));
             }
+
+            /**
+             * @brief Computes circumference of the shape.
+             */
             void computeCircuit()
             {
                 double circumference = 0.0;
@@ -43,6 +76,9 @@ namespace shape{
                 circuit = circumference;
             }
 
+            /**
+             * @brief Computes the area of the shape.
+             */
             void computeArea()
             {
                 double a = 0.0;
@@ -56,28 +92,56 @@ namespace shape{
                 area = abs(a) / 2.0; 
             }
 
+            /**
+             * @brief Constructs a Shape object.
+             * @param n Name of the shape.
+             * @param c Center coordinates of the shape.
+             */
             Shape(const std::string n, MyPair<int,int> c) : name(n), center(c.x, c.y){}
 
-            double getArea()
+            /**
+             * @brief Gets the area of the shape.
+             * @return The computed area.
+             */
+            double getArea() const
             {
                 return area;
             }
 
-            double getCircuit()
+            /**
+             * @brief Gets the circumference of the shape.
+             * @return The computed perimeter.
+             */
+            double getCircuit() const
             {
                 return circuit;
             }
 
-            virtual  unsigned int getCorners()
+            /**
+             * @brief Gets the number of corners of the shape.
+             * @return The number of corners.
+             */
+            virtual  unsigned int getCorners() const
             {
                 return ddata.size() - 1;
             }
 
+            /**
+             * @brief Draws the shape using Gnuplot.
+             */
             void drawMe()
             {
                 createData(ddata);
                 plotShape(name, border);
             }
+
+            /**
+             * @brief Generates a Gnuplot script to plot the shape.
+             * 
+             * @tparam U Type of the coordinates.
+             * @param sN Name of the shape.
+             * @param b Border coordinates.
+             */
             template <typename U>
             void plotShape(std::string sN, MyPair<MyPair<U,U>,MyPair<U,U>> b)
             {
@@ -95,6 +159,13 @@ namespace shape{
                 // Execute the Gnuplot script
                 std::system("gnuplot shapes.gnuplot");
             }
+
+            /**
+             * @brief Creates a data file for plotting the shape.
+             * 
+             * @tparam U Type of the coordinates.
+             * @param data Points to be plotted.
+             */
             template <typename U>
             void createData(std::vector<MyPair<U,U>> &data)
             {
@@ -111,17 +182,27 @@ namespace shape{
                 }
             }
 
-            void printInfo()
+            /**
+             * @brief Prints information about the shape.
+             */
+            void printInfo() const
             {
                 std::cout <<"Name = "<<getName()<<", area = "<<getArea()<<", circiut = "<<getCircuit()<<", corners = "<<getCorners()<<std::endl;
             }
 
-            std::string getName()
+            /**
+             * @brief Gets the name of the shape.
+             * @return The name of the shape.
+             */
+            std::string getName() const
             {
                 return name;
             }
 
-
+            /**
+             * @brief Rotates the shape by a specified angle.
+             * @param degrees The rotation angle in degrees.
+             */
             void rotate(double degrees) {
                 rotationAngle = degrees;
         
@@ -141,21 +222,29 @@ namespace shape{
             }
 
 
-            // Destructor - Rule of Three Point 1
-            // Responsible for releasing resources when the object is destroyed.
+            /* Rule of Three Point 1 */
+            /**
+             * @brief Destructor for the Shape class.
+             */
             virtual ~Shape() {
                 // Example cleanup code (if required): dynamic memory or file handles
             }
-            // Copy Constructor - Rule of Three Point 2
-            // Creates a new object as a copy of an existing object.
+            /* Rule of Three Point 2 */
+            /**
+             * @brief Copy constructor for the Shape class.
+             * @param other The object to copy from.
+             */
             Shape(const Shape& other)
             : area(other.area), circuit(other.circuit),
             border(other.border), center(other.center),
             ddata(other.ddata), name(other.name) {}
 
-            // Copy Assignment Operator - Rule of Three Point 3
-            // Handles assignment between objects, ensuring proper cleanup and copying.
-            
+            /* Rule of Three Point 3 */
+            /**
+             * @brief Copy assignment operator for the Shape class.
+             * @param other The object to assign from.
+             * @return The updated object.
+             */
             Shape& operator=(const Shape& other) 
             {
                 if (this == &other) {  // Self-assignment check
@@ -172,26 +261,43 @@ namespace shape{
             }
     };
 
+    /**
+     * @brief Represents a circular shape (Wheel).
+     * 
+     * @tparam U Type of the radius.
+     */
     template <typename U>
     class Wheel : public Shape
     {
         private:
-            U r;
-            unsigned int res;
+            U r; ///< Radius of the wheel.
+            unsigned int res; ///< Resolution (number of points).
         public:
 
-            unsigned int getCorners()
+            /**
+             * @brief Gets the number of corners of the wheel.
+             * @return Always returns 0 as a wheel has no corners.
+             */
+            unsigned int getCorners() const override
             {
                 return 0;
             }
 
+            /**
+             * @brief Constructs a Wheel object.
+             * @param x Radius of the wheel.
+             * @param res Number of points for the resolution.
+             * @param n Name of the wheel.
+             */
             Wheel(U x, unsigned int res = 30, const std::string n = "Wheel") : res(res), r(x), Shape(n, {0,0})
             {
                 //assumption we are starting draw at center
                 border.x.x = center.x - (ceil(1.5 * r));
                 border.x.y = center.y + (ceil(1.5 * r));
                 border.y = border.x;
-                double offset = 0;// M_PI / 4; //90 // initial draw of firtst point is always (r,0)
+                double offset = 0;
+                //initial point offset to make sure base of shape is  parallel to x axis
+                (res % 2) == 0 ? offset = (M_PI / (res)) : offset = (M_PI / 2) ; 
                 MyPair<double, double> tail;;
                 for (int i = 0; i < res; ++i) {
                     double angle = ((2 * M_PI * i) / res) + offset;  // Angle in radians
@@ -205,15 +311,23 @@ namespace shape{
                 computeCircuit();
                 computeArea();
             }
-            /* rules */
-            // Destructor (Inherited and Virtual)
+            /**
+             * @brief Destructor for the Wheel class.
+             */
             ~Wheel() override {}
 
-            // Copy Constructor
+            /**
+             * @brief Copy constructor for the Wheel class.
+             * @param other The object to copy from.
+             */
             Wheel(const Wheel<U>& other) 
                 : shape::Shape(other), r(other.r) {}
 
-            // Copy Assignment Operator
+            /**
+             * @brief Copy assignment operator for the Wheel class.
+             * @param other The object to assign from.
+             * @return The updated object.
+             */
             Wheel<U>& operator=(const Wheel<U>& other) 
             {
                 if (this == &other) {
@@ -225,15 +339,33 @@ namespace shape{
             }
             
     };
+
+    /**
+     * @brief Represents a rectangle.
+     * 
+     * @tparam U Type of the side length.
+     */
     template <typename U>
     class Rectangle : public Shape
     {
         private:
-            U a;
+            U a; ///< Side length of the rectangle.
         public:
-
+            /**
+             * @brief Constructs a Rectangle object.
+             * @param x Side length of the rectangle.
+             * @param n Name of the rectangle.
+             */
             Rectangle(U x, const std::string n = "Rectangle") : a(x),  Shape(n, {0,0})
             {
+#ifdef USE_WHEEL_BASE
+                double r = (a/2) * sqrt(2);
+                shape::Wheel<U> poly(r,4);
+                //workaround
+                ddata = poly.ddata; // Copy Wheel's data to Rectangle's data
+                border = poly.border; // Optionally copy other information
+                center = poly.center;
+#else
                 //assumption we are starting draw at center
                 border.x.x = center.x - a;
                 border.x.y = center.y + a;
@@ -252,19 +384,29 @@ namespace shape{
                 ddata.push_back(c3);
                 ddata.push_back(c4);
                 ddata.push_back(c1);
-                
+#endif             
                 computeCircuit();
                 computeArea();
+
             }
             //rules
-            // Destructor
+            /**
+             * @brief Destructor for the Rectangle class.
+             */
             ~Rectangle() override {}
 
-            // Copy Constructor
+            /**
+             * @brief Copy constructor for the Rectangle class.
+             * @param other The object to copy from.
+             */
             Rectangle(const Rectangle<U>& other)
                 : shape::Shape(other), a(other.a) {}
 
-            // Copy Assignment Operator
+            /**
+             * @brief Copy assignment operator for the Rectangle class.
+             * @param other The object to assign from.
+             * @return The updated object.
+             */
             Rectangle<U>& operator=(const Rectangle<U>& other) 
             {
                 if (this == &other) return *this; // Self-assignment check
@@ -274,16 +416,40 @@ namespace shape{
             }
     };
 
+    /**
+     * @brief Represents an equilateral triangle.
+     * 
+     * @tparam U Type of the side length.
+     */
     template <typename U>
-    class Triangle : public Shape //rownoramienny
+    class Triangle : public Shape
     {
         private:
-            U a,h;
+            U a; ///< Side length of the triangle.
         public:
 
-            Triangle(U x, U y, const std::string n = "Triangle") : a(x), h(y),   Shape(n, {0,0})
+            /**
+             * @brief Constructs a Triangle object.
+             * @param x Side length of the triangle.
+             * @param n Name of the triangle.
+             */
+            Triangle(U x, const std::string n = "Triangle") : a(x),   Shape(n, {0,0})
             {
+#ifdef USE_WHEEL_BASE
+                //calculate h based on a 
+                double h = (((sqrt(3)/2) * a) * 2 ) / 3; 
+                //calculate r based on a and h
+                double r = sqrt(pow(a/2,2) + pow(h/2,2));
+                shape::Wheel<U> poly(r,3);
+                //workaround
+                ddata = poly.ddata; // Copy Wheel's data to Rectangle's data
+                border = poly.border; // Optionally copy other information
+                center = poly.center;
+                computeCircuit(); //update data
+                computeArea();
+#else
                 //assumption we are starting draw at center
+                U h = (sqrt(3)/2) * a;
                 border.x.x = center.x - a;
                 border.x.y = center.x + a;
                 border.y.x = center.y - h;
@@ -299,28 +465,35 @@ namespace shape{
                 ddata.push_back(c2);
                 ddata.push_back(c3);
                 ddata.push_back(c1);
-
+#endif
                 computeCircuit();
                 computeArea();
             }
             //rules
-            // Destructor
+            /**
+             * @brief Destructor for the Triangle class.
+             */
             ~Triangle() override {}
 
-            // Copy Constructor
+            /**
+             * @brief Copy constructor for the Triangle class.
+             * @param other The object to copy from.
+             */
             Triangle(const Triangle<U>& other)
-                : shape::Shape(other), a(other.a), h(other.h) {}
+                : shape::Shape(other), a(other.a) {}
 
-            // Copy Assignment Operator
+            /**
+             * @brief Copy assignment operator for the Triangle class.
+             * @param other The object to assign from.
+             * @return The updated object.
+             */
             Triangle<U>& operator=(const Triangle<U>& other) 
             {
                 if (this == &other) return *this; // Self-assignment check
                 shape::Shape::operator=(other);  // Call base class copy assignment
                 a = other.a;
-                h = other.h;
                 return *this;
-            }
-            
+            } 
     };
 }
 

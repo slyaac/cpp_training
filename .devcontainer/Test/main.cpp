@@ -1,3 +1,8 @@
+/**
+ * @file main.cpp
+ * @brief Execute test code
+ */
+
 //#include "array_vector.hpp"
 //#include "array_list.hpp"
 #include <iostream>
@@ -5,8 +10,13 @@
 #include "shape.hpp"
 #include <vector>
 #include <iomanip>
+#include <thread>
+#include <atomic>
 
 using namespace std;
+
+atomic<bool> running(true);
+atomic<int> rangle(0);
 
 static constexpr int fibo(int n)
 {
@@ -28,9 +38,6 @@ std::vector<std::unique_ptr<shape::Shape>> makeVector(Args&&... args) {
     (vec.push_back(std::forward<Args>(args)), ...);
     return vec;
 }
-#include <atomic>
-std::atomic<bool> running(true);
-std::atomic<int> rangle(0);
 
 void checkInput() {
     string s_inpput;
@@ -51,7 +58,7 @@ void checkInput() {
         }
     }
 }
-#include <thread>
+
 int main()
 {
 #ifdef ARRAY_ADD
@@ -74,11 +81,13 @@ int main()
         std::cerr << e.what() << '\n';
     }    
 #endif
+
 #ifdef FIBO_TEST  
     constexpr int result = fibo(10);
     cout << "Fibo = "<< result <<", Hex = 0x"<< hex << uppercase << result << endl;
 #endif
-#if 0
+
+#ifdef LIST_ARRAY_MUL
     OtherArray<int, 150, 150> list_array;
     list_array.at(0,0) = 1;
     list_array.at(1,1) = 2;
@@ -97,7 +106,7 @@ int main()
     cout<<"took:"<<duration.count()<<" ms"<<endl;
 #endif
 
-#if 0
+#ifdef VEC_ARRAY_MUL
     Matrix<int> matA(150, 150);
     Matrix<int> matB(150, 150);
 
@@ -123,38 +132,37 @@ int main()
 
 #endif
 
+#ifdef SHAPE_POINTERS
     shape::Wheel<double> wheel(1.5);
     shape::Rectangle<int> rect(10);
-    shape::Triangle<int> tri(10,5);
+    shape::Triangle<int> tri(7);
 
     vector<shape::Shape *> vptr = { &wheel, &rect, &tri};
-#if 0
+
     auto uptr = makeVector(
         std::make_unique<shape::Wheel<int>>(2),
         std::make_unique<shape::Rectangle<int>>(5),
-        std::make_unique<shape::Triangle<int>>(3, 3)
+        std::make_unique<shape::Triangle<int>>(3)
     );
 
     vector<shape::Shape*> nptr = {
         new shape::Wheel<double>(3),
         new shape::Rectangle<int>(4),
-        new shape::Triangle<int>(5, 6)
+        new shape::Triangle<int>(5)
     };
-#endif
+
     for(auto& obj : vptr)
     {
         obj->drawMe();
         obj->printInfo();
     }
-#if 0
+
     for(auto& obj : uptr)
     {
         obj->drawMe();
         obj->printInfo();
     }
-#endif
 
-#if 0
     for(auto& obj : nptr)
     {
         obj->drawMe();
@@ -163,19 +171,21 @@ int main()
     }
 #endif
 
-shape::Wheel<double> poly(2,5);
-poly.drawMe();
-
-std::thread inputThread(checkInput);
-
-
-while (running) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(250)); // Simulate work
-    poly.rotate(rangle);
+    // shape rotation
+    // generates hexagon
+    shape::Wheel<double> poly(4,6,"hexagon");
+    poly.printInfo();
     poly.drawMe();
-}
 
+    std::thread inputThread(checkInput);
+
+    while (running) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(250)); //wait
+        poly.rotate(rangle);
+        poly.drawMe();
+    }
 
     inputThread.join(); // Ensure the input thread is finished
+
     return 0;
 }

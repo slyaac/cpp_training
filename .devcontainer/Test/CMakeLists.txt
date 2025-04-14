@@ -16,7 +16,7 @@ if(MYFLAG STREQUAL  "ON")
     enable_testing()
 #    message(STATUS "MYFLAG is : ${MYFLAG}")
     # Specify the executable
-    add_executable(myCode array.cpp test.cpp)
+    add_executable(myCode test.cpp)
     target_compile_options(myCode PUBLIC -fprofile-arcs -ftest-coverage -fconstexpr-ops-limit=536870912)
     target_link_options(myCode PUBLIC -fprofile-arcs -ftest-coverage)
     # Link GTest libraries
@@ -27,7 +27,7 @@ endif()
 
 if(MYFLAG STREQUAL  "OFF")
 #    message(STATUS "MYFLAG is : ${MYFLAG}")
-    add_executable(myCode array.cpp main.cpp)
+    add_executable(myCode main.cpp)
     target_link_libraries(myCode ${GTEST_LIBRARIES} pthread)
 endif()
 

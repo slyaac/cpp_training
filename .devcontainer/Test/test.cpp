@@ -1,3 +1,9 @@
+/**
+ * @file test.cpp
+ * @brief Execute test cases
+ */
+
+
 #include <gtest/gtest.h>
 
 #include "shape.hpp"
@@ -77,7 +83,7 @@ TEST(ShapeTest, RectangleCorners) {
 
 // Test case for the Triangle class
 TEST(ShapeTest, TriangleCorners) {
-    shape::Triangle<int> tri(10, 5);
+    shape::Triangle<int> tri(10);
     EXPECT_EQ(tri.getCorners(), 3); // A triangle has 3 corners
 }
 
@@ -86,7 +92,7 @@ TEST(ShapeTest, Polymorphism) {
     std::vector<std::unique_ptr<shape::Shape>> shapes;
     shapes.push_back(std::make_unique<shape::Wheel<double>>(5.0));
     shapes.push_back(std::make_unique<shape::Rectangle<int>>(10));
-    shapes.push_back(std::make_unique<shape::Triangle<int>>(10, 5));
+    shapes.push_back(std::make_unique<shape::Triangle<int>>(10));
 
     std::vector<int> expectedCorners = {0, 4, 3};
     for (size_t i = 0; i < shapes.size(); ++i) {

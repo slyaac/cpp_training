@@ -1,3 +1,8 @@
+/**
+ * @file array_list.hpp
+ * @brief list array methods
+ */
+
 #ifndef ARRAY_LIST_H
 #define ARRAY_LIST_H
 

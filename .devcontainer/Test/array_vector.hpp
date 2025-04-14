@@ -1,3 +1,8 @@
+/**
+ * @file array_vector.hpp
+ * @brief vector array methods
+ */
+
 #ifndef ARRAY_VECTOR_H
 #define ARRAY_VECTOR_H
 
