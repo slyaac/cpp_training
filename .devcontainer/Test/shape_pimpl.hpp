@@ -24,7 +24,7 @@ namespace shape_pimpl{
             double getCircuit() const;
             virtual unsigned int getCorners() const;
             void drawMe();
-            void printInfo() const;
+            virtual void printInfo() const;
             void rotate(double degrees);
 
         protected:
@@ -66,6 +66,7 @@ namespace shape_pimpl{
         explicit Wheel(U sideLength, const std::string& name);
         ~Wheel();
         unsigned int getCorners() const override; // Declaration
+        void printInfo() const override;
 
     private:
         std::unique_ptr<WheelImpl<U>> pImpl; // Pimpl for Wheel

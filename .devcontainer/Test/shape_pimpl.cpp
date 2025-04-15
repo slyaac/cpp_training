@@ -355,10 +355,17 @@ namespace shape_pimpl {
 
 
         template <typename U>
-    unsigned int Wheel<U>::getCorners() const {
-    return pImpl->getCorners(); // Delegates to WheelImpl<U>::getCorners()
-}
-    }
+        unsigned int Wheel<U>::getCorners() const {
+            return pImpl->getCorners(); // Uses WheelImpl's implementation
+        }
+
+        template <typename U>
+        void Wheel<U>::printInfo() const {
+            std::cout << "Name: Wheel, "
+                    << "Radius: " << pImpl->r << ", "
+                    << "Corners: " << getCorners() << std::endl; // Use overridden getCorners
+        }
+            }
 
 void testCode()
 {
