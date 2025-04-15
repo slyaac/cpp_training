@@ -13,11 +13,16 @@
 #include <thread>
 #include <atomic>
 
+#include "shape_crtp.hpp"
+
 using namespace std;
 
+#ifdef OBJ_ROTATION
 atomic<bool> running(true);
 atomic<int> rangle(0);
+#endif
 
+#ifdef FIBO_TEST 
 static constexpr int fibo(int n)
 {
     int value = 0;
@@ -32,13 +37,18 @@ static constexpr int fibo(int n)
 
     return value;
 }
+#endif
+
+#ifdef SHAPE_POINTERS
 template <typename... Args>
 std::vector<std::unique_ptr<shape::Shape>> makeVector(Args&&... args) {
     std::vector<std::unique_ptr<shape::Shape>> vec;
     (vec.push_back(std::forward<Args>(args)), ...);
     return vec;
 }
+#endif
 
+#ifdef OBJ_ROTATION
 void checkInput() {
     string s_inpput;
     while (running) {
@@ -58,6 +68,7 @@ void checkInput() {
         }
     }
 }
+#endif
 
 int main()
 {
@@ -171,6 +182,7 @@ int main()
     }
 #endif
 
+#ifdef OBJ_ROTATION
     // shape rotation
     // generates hexagon
     shape::Wheel<double> poly(4,6,"hexagon");
@@ -186,6 +198,14 @@ int main()
     }
 
     inputThread.join(); // Ensure the input thread is finished
+#endif
+
+    shapeCrtp::Wheel<double> w(10);
+    shapeCrtp::Rectangle<double> r(10);
+    shapeCrtp::Triangle<double> t(10);
+    w.printInfo();
+    r.printInfo();
+    t.printInfo();
 
     return 0;
 }
