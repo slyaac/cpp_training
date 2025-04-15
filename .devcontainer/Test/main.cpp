@@ -200,12 +200,14 @@ int main()
     inputThread.join(); // Ensure the input thread is finished
 #endif
 
+#ifdef CRTP_TEST
     shapeCrtp::Wheel<double> w(10);
     shapeCrtp::Rectangle<double> r(10);
     shapeCrtp::Triangle<double> t(10);
     w.printInfo();
     r.printInfo();
     t.printInfo();
+#endif
 
     return 0;
 }

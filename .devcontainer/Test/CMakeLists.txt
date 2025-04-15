@@ -27,7 +27,7 @@ endif()
 
 if(MYFLAG STREQUAL  "OFF")
 #    message(STATUS "MYFLAG is : ${MYFLAG}")
-    add_executable(myCode main.cpp)
+    add_executable(myCode main.cpp shape_pimpl.cpp)
     target_link_libraries(myCode ${GTEST_LIBRARIES} pthread)
 endif()
 
