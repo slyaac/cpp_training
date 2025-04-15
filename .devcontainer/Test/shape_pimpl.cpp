@@ -217,7 +217,7 @@ namespace shape_pimpl {
     }
     
     unsigned int Shape::getCorners() const {
-        return pImpl->ddata.size() - 1;
+        return pImpl->getCorners();
     }
     
     void Shape::rotate(double degrees) {
@@ -232,11 +232,141 @@ namespace shape_pimpl {
         pImpl->drawMe();
     }
 
+    // Rectangle Implementation
+    template <typename U>
+    class RectangleImpl 
+    {
+        public:
+            explicit RectangleImpl(U side) : sideLength(side) {}
 
+            double sideLength;
+            
+            void generatePoints(ShapeImpl& shapeImpl) 
+            {
+                double half = sideLength / 2;
+                std::vector<MyPair<double, double>>  points =
+                {
+                    { half,  - half},
+                    { half,  - half},
+                    { half,  half},
+                    { - half,  half},
+                    { - half,  - half} // Closing the rectangle
+                };
+
+                shapeImpl.ddata = points;
+            }
+    };
+
+    template <typename U>
+    Rectangle<U>::Rectangle(U sideLength, const std::string& name)
+        : Shape(name), pImpl(std::make_unique<RectangleImpl<U>>(sideLength)) 
+        {
+            pImpl->generatePoints(*Shape::pImpl);
+            computeCircuit(); 
+            computeArea();  
+        }
+
+    template <typename U>
+    Rectangle<U>::~Rectangle() = default;
+
+    // Triangle Implementation
+    template <typename U>
+    class TriangleImpl
+    {
+        public:
+            explicit TriangleImpl(U side) : sideLength(side) {}
+
+            double sideLength;
+            
+            void generatePoints(ShapeImpl& shapeImpl) 
+            {
+                double baseHalf = sideLength / 2.0; // Half the base length
+                double height = std::sqrt(3.0) / 2.0 * sideLength; // Height of an equilateral triangle
+                std::vector<MyPair<double, double>>  points =
+                {
+                    { - baseHalf,  - height / 2},
+                    { baseHalf,  - height / 2},
+                    { 0,   height / 2},
+                    { - baseHalf,  - height / 2}
+                };
+
+                shapeImpl.ddata = points;
+            }
+    };
+
+    template <typename U>
+    Triangle<U>::Triangle(U sideLength, const std::string& name)
+        : Shape(name), pImpl(std::make_unique<TriangleImpl<U>>(sideLength)) 
+        {
+            pImpl->generatePoints(*Shape::pImpl);
+            computeCircuit(); 
+            computeArea();  
+        }
+
+        template <typename U>
+        Triangle<U>::~Triangle() = default;
+
+        // Wheel Implementation
     template <typename U>
     class WheelImpl
     {
+        public:
+            explicit WheelImpl(U r) : r(r) {}
+
+            double r;
+            
+            void generatePoints(ShapeImpl& shapeImpl) 
+            {
+                double offset = 0;
+                const unsigned int res = 30;
+                //initial point offset to make sure base of shape is  parallel to x axis
+                (res % 2) == 0 ? offset = (M_PI / (res)) : offset = (M_PI / 2) ; 
+                MyPair<double, double> tail;
+                for (int i = 0; i < res; ++i) 
+                {
+                    double angle = ((2 * M_PI * i) / res) + offset;  // Angle in radians
+                    MyPair<double, double> p;
+                    p.x = r * cos(angle);
+                    p.y = r * sin(angle);
+                    shapeImpl.ddata.push_back(p);
+                    i ? 0 : tail = p;
+                }
+                shapeImpl.ddata.push_back(tail);
+            }
+
+            unsigned int getCorners() const 
+            {
+                return 0;
+            }
 
     };
 
+        template <typename U>
+        Wheel<U>::Wheel(U r, const std::string& name)
+            : Shape(name), pImpl(std::make_unique<WheelImpl<U>>(r)) 
+        {
+            pImpl->generatePoints(*Shape::pImpl);
+            computeCircuit(); 
+            computeArea();  
+        }
+
+        template <typename U>
+        Wheel<U>::~Wheel() = default;
+
+
+        template <typename U>
+    unsigned int Wheel<U>::getCorners() const {
+    return pImpl->getCorners(); // Delegates to WheelImpl<U>::getCorners()
+}
+    }
+
+void testCode()
+{
+    shape_pimpl::Rectangle<double> rect(5,"kwa");
+    shape_pimpl::Triangle<double> tri(10,"tri");
+    shape_pimpl::Wheel<double> whe(15,"whe");
+
+    rect.printInfo();
+    tri.printInfo();
+    whe.printInfo();
 }

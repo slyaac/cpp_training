@@ -69,7 +69,7 @@ void checkInput() {
     }
 }
 #endif
-
+extern void testCode();
 int main()
 {
 #ifdef ARRAY_ADD
@@ -208,6 +208,6 @@ int main()
     r.printInfo();
     t.printInfo();
 #endif
-
+    testCode();
     return 0;
 }
